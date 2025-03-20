@@ -27,6 +27,9 @@ type Store struct {
 	certificatePaths          []string
 	certificateDirectoryPaths []string
 	watcher                   *fswatch.Watcher
+	tlsDecryptionEnabled      bool
+	tlsDecryptionPrivateKey   any
+	tlsDecryptionCertificate  *x509.Certificate
 }
 
 func NewStore(ctx context.Context, logger logger.Logger, options option.CertificateOptions) (*Store, error) {
@@ -182,4 +185,16 @@ func isSameDirSymlink(f fs.DirEntry, dir string) bool {
 	}
 	target, err := os.Readlink(filepath.Join(dir, f.Name()))
 	return err == nil && !strings.Contains(target, "/")
+}
+
+func (s *Store) TLSDecryptionEnabled() bool {
+	return s.tlsDecryptionEnabled
+}
+
+func (s *Store) TLSDecryptionCertificate() *x509.Certificate {
+	return s.tlsDecryptionCertificate
+}
+
+func (s *Store) TLSDecryptionPrivateKey() any {
+	return s.tlsDecryptionPrivateKey
 }

@@ -45,6 +45,7 @@ var (
 	debugFlags  []string
 	sharedTags  []string
 	iosTags     []string
+	androidTags []string
 	debugTags   []string
 )
 
@@ -58,8 +59,9 @@ func init() {
 	sharedFlags = append(sharedFlags, "-ldflags", "-X github.com/sagernet/sing-box/constant.Version="+currentTag+" -s -w -buildid=")
 	debugFlags = append(debugFlags, "-ldflags", "-X github.com/sagernet/sing-box/constant.Version="+currentTag)
 
-	sharedTags = append(sharedTags, "with_gvisor", "with_quic", "with_wireguard", "with_utls", "with_clash_api", "with_tailscale")
-	iosTags = append(iosTags, "with_dhcp", "with_low_memory", "with_conntrack")
+	sharedTags = append(sharedTags, "with_gvisor", "with_quic", "with_wireguard", "with_utls", "with_clash_api", "with_script")
+	iosTags = append(iosTags, "with_low_memory", "with_conntrack")
+	androidTags = append(sharedTags, "with_tailscale")
 	debugTags = append(debugTags, "debug")
 }
 
@@ -105,11 +107,12 @@ func buildAndroid() {
 		args = append(args, debugFlags...)
 	}
 
+	tags := append(sharedTags, androidTags...)
 	args = append(args, "-tags")
 	if !debugEnabled {
-		args = append(args, strings.Join(sharedTags, ","))
+		args = append(args, strings.Join(tags, ","))
 	} else {
-		args = append(args, strings.Join(append(sharedTags, debugTags...), ","))
+		args = append(args, strings.Join(append(tags, debugTags...), ","))
 	}
 	args = append(args, "./experimental/libbox")
 
