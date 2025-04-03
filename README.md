@@ -1,12 +1,45 @@
-# sing-box
+# mbox
 
-The universal proxy platform.
+A fork of sing-box with [mieru](https://github.com/enfein/mieru) protocol
+support.
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/sing-box.svg)](https://repology.org/project/sing-box/versions)
+## Example Configuration
 
-## Documentation
-
-https://sing-box.sagernet.org
+```js
+{
+    "inbounds": [
+        {
+            "type": "mixed",
+            "tag": "mixed-in",
+            "listen": "0.0.0.0",
+            "listen_port": 1080
+        }
+    ],
+    "outbounds": [
+        {
+            "type": "mieru",
+            "tag": "mieru-out",
+            "server": "127.0.0.1",
+            "server_port": 8964,
+            "transport": "TCP",
+            "username": "baozi",
+            "password": "manlianpenfen"
+        }
+    ],
+    "route": {
+        "rules": [
+            {
+                "inbound": ["mixed-in"],
+                "action": "route",
+                "outbound": "mieru-out"
+            }
+        ]
+    },
+    "log": {
+        "level": "warn"
+    }
+}
+```
 
 ## License
 
