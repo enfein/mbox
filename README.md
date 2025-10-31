@@ -1,20 +1,63 @@
-> Sponsored by [Warp](https://go.warp.dev/sing-box), built for coding with multiple AI agents
+# mbox
 
-<a href="https://go.warp.dev/sing-box">
-<img alt="Warp sponsorship" width="400" src="https://github.com/warpdotdev/brand-assets/raw/refs/heads/main/Github/Sponsor/Warp-Github-LG-02.png">
-</a>
+A reference implementation of [mieru](https://github.com/enfein/mieru) protocol
+in sing-box.
 
----
+We don't guarantee all sing-box features are working. We recommend you maintain
+your own fork.
 
-# sing-box
+## Example Configuration with mieru Outbound
 
-The universal proxy platform.
+```js
+{
+    "inbounds": [
+        {
+            "type": "mixed",
+            "tag": "mixed-in",
+            "listen": "0.0.0.0",
+            "listen_port": 1080
+        }
+    ],
+    "outbounds": [
+        {
+            "type": "mieru",
+            "tag": "mieru-out",
+            "server": "127.0.0.1",
+            "server_port": 8964,
+            "transport": "TCP",
+            "username": "baozi",
+            "password": "manlianpenfen"
+        }
+    ],
+    "route": {
+        "rules": [
+            {
+                "inbound": ["mixed-in"],
+                "action": "route",
+                "outbound": "mieru-out"
+            }
+        ]
+    },
+    "log": {
+        "level": "warn"
+    }
+}
+```
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/sing-box.svg)](https://repology.org/project/sing-box/versions)
+You can also use `server_ports` to set a list of port ranges.
 
-## Documentation
+## Branches
 
-https://sing-box.sagernet.org
+- `main` branch tracks the upstream release.
+- `mieru` branch has the latest code based on upstream `main` branch. It may not be stable.
+- `release-*` branches record the references where binaries are published. Those branches don't change after creation.
+
+## Limitations
+
+In 1.12.14 release:
+
+- UDP outbound can't use domain name as server address.
+- Only outbound is supported. Inbound will be added in the future.
 
 ## License
 
